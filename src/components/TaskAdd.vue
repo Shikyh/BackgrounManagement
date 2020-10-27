@@ -9,7 +9,8 @@
         <div class="row">
           <div class="col-xs12 col-sm12 col-md12 col-lg12">
             <div class="fill">
-              <textarea placeholder="请输入任务名称" class="input_area" v-model="task"></textarea>
+              <textarea placeholder="请输入任务名称" class="input_area" v-model="task"
+                        :class="{tast_empty: task_empty}"></textarea>
               <label class="scri-label">请输入任务名称</label>
             </div>
           </div>
@@ -21,13 +22,8 @@
               align="right"
               type="date"
               placeholder="选择日期"
-              :picker-options="pickerOptions" value-format="yyyy-MM-dd">
+              :picker-options="pickerOptions" value-format="yyyy-MM-dd" :class="date_empty">
             </el-date-picker>
-<!--            //这里采用element得日期组件-->
-            <!--            <div class="fill">-->
-            <!--              <input placeholder="请输入日期" class="input" v-model="date">-->
-            <!--              <label class="scri-label">请输入时间</label>-->
-            <!--            </div>-->
           </div>
         </div>
       </div>
@@ -51,9 +47,9 @@
       return {
         task: '',
         date: '',
-        pickerOptions: {
-
-        }
+        task_empty: false,
+        date_empty: false,
+        pickerOptions: {}
       }
     },
 
@@ -63,10 +59,32 @@
       },
       submit () {
         const obj = {}
-        obj.task = this.task
-        obj.date = this.date
-        this.$emit('submit', obj)
-        this.$emit('show')
+        if (this.task === '') {
+          this.task_empty = true
+          this.$msg.showmsg('请输入任务名称', 0, 1000)
+        } else {
+          this.task_empty = false
+        }
+        if (this.date === '') {
+          this.$msg.showmsg('日期不能为空', 0, 1000)
+        }
+        if (this.date !== '' && this.task !== '') {
+          this.$msg.showmsg('添加成功', 1, 1000)
+          obj.task = this.task
+          obj.date = this.date
+          this.$emit('submit', obj)
+          this.$emit('show')
+        }
+
+      }
+    },
+    watch: {
+      task: {
+        handler: function (n, o) {
+          if (n !== '') {
+            this.task_empty = false
+          }
+        }
       }
     }
 
@@ -75,6 +93,7 @@
 
 <style scoped lang="scss">
   @import "assets/css/flex_gird.scss";
+
   #cancel {
     position: absolute;
     font-size: 20px;
@@ -196,6 +215,10 @@
     border: none;
     border-radius: 3px;
     margin-left: 5px;
+  }
+
+  .tast_empty {
+    border: 1px solid red;
   }
 
   @media screen and (max-width: 768px) {

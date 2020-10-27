@@ -30,10 +30,11 @@ export default new VueRouter({
     {
       path: '/formdesign',
       name: 'formdesign',
-      meta: { title: '表单设计' },
+      meta: { title: '表单设计,图板' },
       icon:'fa-wpforms',
       component: () => import('@/views/formdesign/FormDesign')
     },
+
     {
       path: '/onlinedevelopment',
       name: 'onlinedevelopment',

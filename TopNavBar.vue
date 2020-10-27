@@ -40,7 +40,7 @@
       delectInfo () {
         this.hasRest = false
         this.$nextTick(() => {
-          this.hasRest = true
+          this.hasRest = true//重新加载组件
         })
       },
       getBreadlist () {

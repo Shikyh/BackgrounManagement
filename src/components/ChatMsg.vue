@@ -103,10 +103,6 @@
     margin-right: 20px;
   }
 
-  .msg_item {
-    animation: slide-in 1s .5s linear;
-    transition: all 1s;
-  }
 
   .msg_box {
     width: 100%;
@@ -238,7 +234,6 @@
   @keyframes slide-in {
     from {
       transform: translateY(10px);
-
     }
     to {
       transform: translateY(0)

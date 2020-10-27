@@ -17,7 +17,6 @@
 
   export default {
     name: 'TopNavBar',
-
     data () {
       return {
         hasRest: true,

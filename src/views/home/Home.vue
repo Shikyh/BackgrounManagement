@@ -75,28 +75,31 @@
     </div>
     <div class="row">
       <div class="col-xs12 col-sm12 col-md8 col-lg8">
-        <div class="table count">
-          <div class="tablerow">
-            <div class="cell head">下单日期</div>
-            <div class="cell head">订单号</div>
-            <div class="cell head">商品</div>
-            <div class="cell head">姓名</div>
-            <div class="cell head">价格</div>
-            <div class="cell head">数量</div>
-            <div class="cell head">总价</div>
-          </div>
-          <div class="contentbody count">
-            <div class="tablerow" v-for="item in orderlist" :key="item.ordernum">
-              <div class="cell content">{{item.date}}</div>
-              <div class="cell">{{item.ordernum}}</div>
-              <div class="cell">{{item.good}}</div>
-              <div class="cell">{{item.buyer}}</div>
-              <div class="cell">{{item.singleprice}}</div>
-              <div class="cell">{{item.count}}</div>
-              <div class="cell">{{item.totalprice}}</div>
-            </div>
-          </div>
-        </div>
+<!--        <div class="table count">-->
+<!--          <div class="tablerow">-->
+<!--            <div class="cell head">下单日期</div>-->
+<!--            <div class="cell head">订单号</div>-->
+<!--            <div class="cell head">商品</div>-->
+<!--            <div class="cell head">姓名</div>-->
+<!--            <div class="cell head">价格</div>-->
+<!--            <div class="cell head">数量</div>-->
+<!--            <div class="cell head">总价</div>-->
+<!--          </div>-->
+<!--          <div class="contentbody count">-->
+<!--            <div class="tablerow" v-for="item in orderlist" :key="item.ordernum">-->
+<!--              <div class="cell content">{{item.date}}</div>-->
+<!--              <div class="cell">{{item.ordernum}}</div>-->
+<!--              <div class="cell">{{item.good}}</div>-->
+<!--              <div class="cell">{{item.buyer}}</div>-->
+<!--              <div class="cell">{{item.singleprice}}</div>-->
+<!--              <div class="cell">{{item.count}}</div>-->
+<!--              <div class="cell">{{item.totalprice}}</div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+        <a-table :columns="col" :data-source="orderlist" class="a-table">
+          <a slot="name" slot-scope="text">{{text}}</a>
+        </a-table>
 
       </div>
       <div class="col-xs12 col-sm12 col-md4 col-lg4">
@@ -140,6 +143,48 @@
   import TaskAdd from '@/components/TaskAdd'
   import ChatMsg from '@/components/ChatMsg'
 
+  const col = [
+    {
+      title: '下单日期',
+      dataIndex: 'orderdate',
+      key: 'orderdate'
+    },
+    {
+      title: '订单号',
+      dataIndex: 'ordernum',
+      key: 'ordernum'
+    },
+    {
+      title: '商品',
+      dataIndex: 'good',
+      key: 'good'
+    },
+    {
+      title: '价格',
+      dataIndex: 'price',
+      key: 'price'
+    },
+    {
+      title: '购买用户',
+      dataIndex: 'buyer',
+      key: 'buyer'
+    },
+    {
+      title: '单价',
+      dataIndex: 'singelprice',
+      key: 'singelprice'
+    },
+    {
+      title: '数量',
+      dataIndex: 'num',
+      key: 'num'
+    },
+    {
+      title: '实付',
+      dataIndex: 'totalprice',
+      key: 'totalprice'
+    },
+  ]
   export default {
     name: 'Home',
     components: {
@@ -149,6 +194,7 @@
     props: {},
     data () {
       return {
+        col:col,
         show: false,
         isload: false,
         arr: [10, 89, 90, 86, 10, 89],
@@ -156,6 +202,7 @@
         check: false,
         orderlist: [
           {
+            'key':'1',
             'date': '2020-08-05',
             'ordernum': '100398',
             'good': 'iPhone X 64Gb Grey',
@@ -165,6 +212,7 @@
             'totalprice': '4499',
           },
           {
+            'key':'2',
             'date': '2020-07-09',
             'ordernum': '100899',
             'good': 'Samsung Galaxy S10',
@@ -174,6 +222,7 @@
             'totalprice': '5999',
           },
           {
+            'key':'3',
             'date': '2019-06-26',
             'ordernum': '189616',
             'good': '港风男士短袖',
@@ -183,6 +232,7 @@
             'totalprice': '56',
           },
           {
+            'key':'4',
             'date': '2020-05-24',
             'ordernum': '155506',
             'good': '纯甄牛奶',
@@ -192,6 +242,7 @@
             'totalprice': '24',
           },
           {
+            'key':'5',
             'date': '2020-03-05',
             'ordernum': '155589',
             'good': '家用电风扇',
@@ -391,7 +442,10 @@
 <style scoped lang="scss">
   @import "assets/css/home.scss";
   @import "assets/css/flex_gird.scss";
-
+  @import "~ant-design-vue/dist/antd.css";
+  .ant-table-tbody{
+    background-color: #fff!important;
+  }
   .slide-enter, .slide-leave-to {
 
   }

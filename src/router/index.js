@@ -36,11 +36,11 @@ export default new VueRouter({
     },
 
     {
-      path: '/onlinedevelopment',
-      name: 'onlinedevelopment',
-      meta: { title: '在线开发' },
+      path: '/dataview',
+      name: 'dataview',
+      meta: { title: '数据可视化' },
       icon:'fa-cloud',
-      component: () => import('@/views/onlinedevelopment/OnlineDevelopment')
+      component: () => import('@/views/dataview/Echarts')
     },
     {
       path: '/usermanagement',

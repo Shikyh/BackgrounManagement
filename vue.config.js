@@ -1,3 +1,5 @@
+const path = require('path')
+const CompressionPlugin = require("compression-webpack-plugin")
 module.exports = {
   lintOnSave: false,
   configureWebpack: {
@@ -27,5 +29,24 @@ module.exports = {
         }
       }
     }
-  }
+  },
+  chainWebpack: (config) => {
+    //生产环境，开启js\css压缩
+    if (process.env.NODE_ENV === 'production') {
+      config.plugin('compressionPlugin').use(new CompressionPlugin({
+        test: /\.js$|.\css|.\less/, // 匹配文件名
+        threshold: 10240, // 对超过10k的数据压缩
+        deleteOriginalAssets: false // 不删除源文件
+      }))
+    }
+
+    // 配置 webpack 识别 markdown 为普通的文件
+    config.module
+      .rule('markdown')
+      .test(/\.md$/)
+      .use()
+      .loader('file-loader')
+      .end()
+  },
+
 }

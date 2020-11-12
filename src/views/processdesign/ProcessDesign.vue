@@ -209,6 +209,12 @@
                 <button @click="removeitem(index)">删除</button>
               </li>
             </ul>
+            <label>读取文件</label>
+            <input type="file" id="readfile">
+            <label>es6探索记,类数组的好处</label>
+            <div id="div1" class="box1">你好</div>
+            <div id="div2" class="box1 box2">单例测试</div>
+            <div id="div3" class="box1 box2 box3">aa</div>
           </div>
         </div>
       </div>
@@ -304,6 +310,61 @@
       }
     },
     methods: {
+      likearr () {
+        function tokenlist (dom) {
+          //this指向每一个dom实例
+          Object.defineProperty(this, 'value', {
+            set (v) {
+              dom.className = v
+            }
+          })
+        }
+
+        tokenlist.prototype = {
+          constructor: tokenlist,
+          contain: function (val) {
+            for (let i = 0; i < this.length; i++) {
+              return this[i] = val
+            }
+          },
+          add: function (val) {
+            [].push.call(this, val)
+            this.value = [].join.call(this, ' ')
+            return this
+          },
+          remove: function (val) {
+            console.log(this)
+            for (let i = 0; i < this.length; i++) {
+              if (this[i] === val) {
+                [].splice(this, i, 1)
+                this.value = this
+              }
+            }
+            return this
+          },
+          toogle: function (val) {
+            this.contain(val) ? this.remove(val) : ''
+            this.add(val)
+            return this
+          }
+        }
+        const div1 = document.querySelector('#div1')
+        const div2 = document.querySelector('#div2')
+        const div3 = document.querySelector('#div3')
+        HTMLElement.prototype.newclasslist = []
+        Object.defineProperty(HTMLElement.prototype, 'newclasslist', {
+          get () {
+            if (!this._dt1) {
+              this._dt1 = this.className.split(' ')
+              this._dt1.__proto__ = new tokenlist(this)
+            }
+            return this._dt1
+          },
+          set (v) {
+          }
+        })
+        console.log(div1.newclasslist.__proto__.toogle('box1'))
+      },
       ua () {
         let ua = navigator.userAgent
         if (ua.indexOf('Chrome') > -1) {
@@ -458,8 +519,27 @@
       },
       removeitem (index) {
 
+      },
+      getdata1 () {
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            console.log(resolve('query1'))
+          }, 1000)
+        })
+      },
+      getdata2 () {
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            resolve('query2')
+          }, 1000)
+        })
+      },
+      async run () {
+        const data1 = await this.getdata1()
+        console.log(data1)
+        const data2 = await this.getdata2()
+        console.log(data2)
       }
-
     },
     created () {
       let ck = [{
@@ -489,6 +569,18 @@
       this.operationarr(this.specialarr)
     },
     mounted () {
+      let file = document.querySelector('#readfile')
+      file.addEventListener('change', () => {
+        const read = new FileReader()
+        //read.readAsText(file.files[0],'utf8')
+        read.readAsDataURL(file.files[0])
+        read.onload = () => {
+          const img = new Image()
+          img.src = read.result
+          alert(img.src)
+
+        }
+      })
       this.onloadimg(require('@/assets/img/avatar-01.jpg'), function () {
         //这里不要使用箭头函数，即使使用call也改变不了this的指向，还是会指向当前上下文,既是vue当前实例
       })
@@ -673,6 +765,7 @@
       m.set('huangshiqi', '24')
       m.set('huangyongsheng', '22')
       m.set('daihsuaihu', '26')
+      console.log(m.get('huangshiqi'))
 
       function people () {
         this.name = 'huangshiqi'
@@ -937,7 +1030,94 @@
       obj1['A'] = 'X'
       obj1['B'] = 'Y'
       delete obj1['X']
-      console.log(obj1)
+      // function sleep(ms) {
+      //   return new Promise((resolve) => {
+      //     setTimeout(() => {
+      //       resolve('sleep for ' + ms + ' ms');
+      //     }, ms);
+      //   });
+      // }
+      // async function asyncfunction () {
+      //   console.time('asyncFunction total executing:')
+      //   const sleep1 = await sleep(1000)
+      //   console.log('sleep1'+ sleep1)
+      //   const [sleep2,sleep3,sleep4] =await Promise.all([sleep(2000),sleep(1000),sleep(1500)])
+      //   console.log('sleep2'+ sleep2)
+      //   console.log('sleep3'+ sleep3)
+      //   console.log('sleep4'+ sleep4)
+      //   const re = await Promise.race([sleep(2000),sleep(1000),sleep(1500)])
+      //   console.log('rece'+ re)
+      //   console.timeEnd('asyncFunction total executing:')
+      //   return 'all done'
+      // }
+      // asyncfunction().then(data =>{
+      //   console.log(data)
+      // }).catch(error =>{
+      //   console.log(error)
+      // })
+      // console.log('after async')
+      function taketime (n) {
+        return new Promise((resolve) => {
+          setTimeout(() => resolve(n + 100), n)
+        })
+      }
+
+      // function step1 (n) {
+      //   console.log('step1 with' +n)
+      //   return taketime(n)//这个时候相当于拿到了前一步的结果
+      // }
+      // function step2 (n) {
+      //   console.log('step2 with' + n)
+      //   return taketime(n)
+      // }
+      // function doit () {
+      //   const t = 300
+      //   step1(t).then(t2 => step2(t2)).then(result => {
+      //     console.timeEnd('doit')
+      //   })
+      // }
+      // doit()
+      //现在要求将上一次结果都返回
+      function step1 (n) {
+        console.log('step1 with' + n)
+        return taketime(n)
+      }
+
+      function step2 (m, n) {
+        console.log('step2 with' + m + ',' + n)
+        return taketime(n + m)
+      }
+
+      function step3 (k, m, n) {
+        console.log('step3 with' + k + ',' + m + ',' + n)
+        return taketime(n + m + k)
+      }
+      function doit () {
+        const t1 = 100
+        step1(t1).then(t2 =>{
+          return step2(t1,t2).then(t3 => [t1,t2,t3])//这里为了获取上一步的结果
+        }).then(times =>{
+          const [t1,t2,t3] = times
+          return step3(t1,t2,t3)
+        }).then(result =>{
+          console.log(result)
+        })
+      }
+      doit()
+      function C () {}
+      let o = new C()
+      console.log(Object.getPrototypeOf(o))
+      'use strict'
+      let obj2 = {
+        i:10,
+        b:()=> console.log(this.i,this),//因为不是函数，所以此时的this指向是vue实例，如果不是vue环境,此时this将会指向window对象。所以此时this.i由于不存在,显示undefinded
+        c:function () {
+          console.log(this.i, this)
+        }
+      }
+      obj2.b()
+      obj2.c()
+
     }
   }
 </script>
